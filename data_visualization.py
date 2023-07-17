@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import pandas as pd
+import seaborn as sns
 
 # Function to load CSV data at the given filepath
 def load_data(csv_filepath):
@@ -73,5 +74,42 @@ def visualize_feature_distribution(dataset_filepath):
     dataset_filename = dataset_filepath.split('/')[-1]
     dataset_file_prefix = dataset_filename.split('.')[0]
     plt.savefig('visualizations/' + dataset_file_prefix + '_' + 'feature_distribution.png', dpi=300)
+
+    return None
+
+# Function to visualize feature correlation via heatmap
+def visualize_feature_correlation(dataset_filepath):
+    # Load the dataset into a DataFrame
+    df = load_data(dataset_filepath)
+
+    # Drop the "url" column since it's not a feature
+    df = df.drop(columns=['url'])
+
+    # Compute correlation matrix
+    corr_matrix = df.corr()
+
+    # Create a larger figure
+    plt.figure(figsize=(12, 6))
+
+    # Set title
+    plt.title('Feature Correlation Matrix')
+
+    # Plot data
+    corr_plot = sns.heatmap(corr_matrix, annot=True, cmap='Blues')
+
+    # Rotate x-axis labels
+    plt.xticks(rotation=90)
+
+    # Rotate x-axis labels to horizontal and set tight layout to prevent overlapping labels
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+
+    # Adjust subplot parameters to make more space at the bottom
+    plt.subplots_adjust(bottom=0.25)
+
+    # Save the plot as a PNG image
+    dataset_filename = dataset_filepath.split('/')[-1]
+    dataset_file_prefix = dataset_filename.split('.')[0]
+    plt.savefig('visualizations/' + dataset_file_prefix + '_' + 'feature_correlation.png', dpi=300)
 
     return None
