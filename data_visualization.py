@@ -24,7 +24,7 @@ def visualize_binary_feature_distribution(dataset_filepath, binary_features, tar
     grouped_df = df.groupby(target_header).count().T
 
     # Plot data
-    fd_plot = grouped_df.plot(kind='bar', stacked=True, figsize=(12, 6))
+    fd_plot = grouped_df.plot(kind='bar', stacked=True, figsize=(15, 6))
 
     # Get the count of each feature for each class
     legitimate_counts = grouped_df['legitimate'].tolist()
@@ -55,7 +55,7 @@ def visualize_binary_feature_distribution(dataset_filepath, binary_features, tar
 
     # Set and move y-label for visibility
     fd_plot.set_ylabel('Count', rotation=0)
-    fd_plot.yaxis.set_label_coords(-0.15,0.5)
+    fd_plot.yaxis.set_label_coords(-0.06,0.5)
 
     # Rotate x-axis labels to horizontal and set tight layout to prevent overlapping labels
     plt.xticks(rotation=45)
@@ -65,7 +65,7 @@ def visualize_binary_feature_distribution(dataset_filepath, binary_features, tar
     plt.subplots_adjust(bottom=0.3)
 
     # Add a text box explaining the value format
-    explanation_text = 'Each stacked bar represents the distribution of the binary feature\nbased on the count of whether they are present or not in examples.\nFormat: (Legitimate Count, Phishing Count)'
+    explanation_text = 'Each stacked bar represents the distribution of the binary feature\nbased on the count of whether they are present or not in each class.\nFormat: (Legitimate Count, Phishing Count)'
     plt.gcf().text(0.02, 0.02, explanation_text, fontsize=12)
 
     # Save the plot as a PNG image
@@ -87,7 +87,7 @@ def visualize_numerical_feature_distribution(dataset_filepath, numerical_feature
     grouped_df = df.groupby(target_header).mean().round(2).T
 
     # Plot data
-    fd_plot = grouped_df.plot(kind='bar', stacked=True, figsize=(12, 6), color=['seagreen', 'orange'])
+    fd_plot = grouped_df.plot(kind='bar', stacked=True, figsize=(15, 6), color=['seagreen', 'orange'])
 
     # Get the count of each feature for each class
     legitimate_counts = grouped_df['legitimate'].tolist()
@@ -111,14 +111,14 @@ def visualize_numerical_feature_distribution(dataset_filepath, numerical_feature
         
         # Add the text label to the bar plot at the specified x and y coordinates
         # The x-coordinate is the count 'i', and the text is horizontally aligned at the center
-        fd_plot.text(i, y_coordinate, text_label, ha='center')
+        fd_plot.text(i, y_coordinate, text_label, ha='center', fontsize=10)
 
     # Set title
     plt.title('Mean Value of Numerical Features Across URL Classes')
 
     # Set and move y-label for visibility
     fd_plot.set_ylabel('Mean Value', rotation=0)    
-    fd_plot.yaxis.set_label_coords(-0.15,0.5)
+    fd_plot.yaxis.set_label_coords(-0.06,0.5)
 
     # Rotate x-axis labels to horizontal and set tight layout to prevent overlapping labels
     plt.xticks(rotation=45)
@@ -128,7 +128,7 @@ def visualize_numerical_feature_distribution(dataset_filepath, numerical_feature
     plt.subplots_adjust(bottom=0.3)
 
     # Add a text box explaining the value format
-    explanation_text = 'Each stacked bar illustrates the distribution of the numerical feature\nbased on the mean value across both classes.'
+    explanation_text = 'Each stacked bar illustrates the distribution of the numerical feature\nbased on the mean value across both classes.\nFormat: (Legitimate Mean Value, Phishing Mean Value)'
     plt.gcf().text(0.02, 0.02, explanation_text, fontsize=12)
 
     # Save the plot as a PNG image
