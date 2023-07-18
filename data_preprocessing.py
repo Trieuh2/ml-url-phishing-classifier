@@ -1,14 +1,9 @@
 import pandas as pd
 
-# Function to preprocess the data
+# Function to create the preprocessed datasets
 def preprocess_data(raw_data_filepath, selected_features, target_header):
-    # Load the raw dataset
     raw_data = load_data(raw_data_filepath)
-
-    # Create the transformed dataset
     transformed_data = create_transformed_csv(raw_data, selected_features, target_header)
-
-    # Split the transformed dataset into train-validation and testing datasets
     split_transformed_data(transformed_data)
 
 # Function to load CSV data at the given filepath
