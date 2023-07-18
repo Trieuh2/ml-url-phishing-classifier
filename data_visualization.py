@@ -17,9 +17,6 @@ def visualize_feature_distribution(dataset_filepath):
     # Replace zeros in the dataset with NaNs (preparing for counting feature presence)
     df = df.replace(0, pd.NaT)
 
-    # Drop the "url" column since it's not a feature
-    df = df.drop(columns=['url'])
-
     # Compute count of each feature grouped by each class
     grouped_df = df.groupby('status').count().T
 
@@ -81,9 +78,6 @@ def visualize_feature_distribution(dataset_filepath):
 def visualize_feature_correlation(dataset_filepath):
     # Load the dataset into a DataFrame
     df = load_data(dataset_filepath)
-
-    # Drop the "url" column since it's not a feature
-    df = df.drop(columns=['url'])
 
     # Compute correlation matrix
     corr_matrix = df.corr()
