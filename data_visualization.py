@@ -10,9 +10,9 @@ def load_data(csv_filepath):
     return data
 
 # Function to visualize the binary features' distribution per class
-def visualize_binary_feature_distribution(dataset_filepath, binary_features, target_header):
+def visualize_binary_feature_distribution(transformed_dataset_filepath, binary_features, target_header):
     # Load the dataset into a DataFrame
-    df = load_data(dataset_filepath)
+    df = load_data(transformed_dataset_filepath)
 
     # Drop all features that are not binary
     df = df[binary_features + [target_header]]
@@ -69,16 +69,16 @@ def visualize_binary_feature_distribution(dataset_filepath, binary_features, tar
     plt.gcf().text(0.02, 0.02, explanation_text, fontsize=12)
 
     # Save the plot as a PNG image
-    dataset_filename = dataset_filepath.split('/')[-1]
+    dataset_filename = transformed_dataset_filepath.split('/')[-1]
     dataset_file_prefix = dataset_filename.split('.')[0]
     plt.savefig('visualizations/' + dataset_file_prefix + '_binary_feature_distribution.png', dpi=300)
 
     return None
 
 # Function to visualize the numerical features' distribution per class
-def visualize_numerical_feature_distribution(dataset_filepath, numerical_features, target_header):
+def visualize_numerical_feature_distribution(transformed_dataset_filepath, numerical_features, target_header):
     # Load the dataset into a DataFrame
-    df = load_data(dataset_filepath)
+    df = load_data(transformed_dataset_filepath)
 
     # Drop all features that are not numerical
     df = df[numerical_features + [target_header]]
@@ -132,16 +132,16 @@ def visualize_numerical_feature_distribution(dataset_filepath, numerical_feature
     plt.gcf().text(0.02, 0.02, explanation_text, fontsize=12)
 
     # Save the plot as a PNG image
-    dataset_filename = dataset_filepath.split('/')[-1]
+    dataset_filename = transformed_dataset_filepath.split('/')[-1]
     dataset_file_prefix = dataset_filename.split('.')[0]
     plt.savefig('visualizations/' + dataset_file_prefix + '_numerical_feature_distribution.png', dpi=300)
 
     return None
 
 # Function to visualize binary feature correlation via heatmap
-def visualize_feature_correlation(dataset_filepath, feature_type, selected_features, target_header):
+def visualize_feature_correlation(transformed_dataset_filepath, feature_type, selected_features, target_header):
     # Load the dataset into a DataFrame
-    df = load_data(dataset_filepath)
+    df = load_data(transformed_dataset_filepath)
 
     # Drop all features that are not binary
     df = df[selected_features + [target_header]]
@@ -166,7 +166,7 @@ def visualize_feature_correlation(dataset_filepath, feature_type, selected_featu
     plt.subplots_adjust(bottom=0.25)
 
     # Save the plot as a PNG image
-    dataset_filename = dataset_filepath.split('/')[-1]
+    dataset_filename = transformed_dataset_filepath.split('/')[-1]
     dataset_file_prefix = dataset_filename.split('.')[0]
     plt.savefig('visualizations/' + dataset_file_prefix + '_' + feature_type + '_feature_correlation.png', dpi=300)
 
