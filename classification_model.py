@@ -1,9 +1,8 @@
-# Data Processing
+import feature_extractor as fe
 import pandas as pd
 import numpy as np
 import joblib as jb
 
-# Modelling
 from joblib import dump, load
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, confusion_matrix, precision_score, recall_score, ConfusionMatrixDisplay
@@ -27,7 +26,6 @@ def create_model(train_validation_dataset_filepath, target_header, custom_hyperp
     # Load and split the feature and target data
     X_train = load_data(train_validation_dataset_filepath)
     X_train = X_train.drop(columns=[target_header])
-
     Y_train = load_data(train_validation_dataset_filepath)
     Y_train = Y_train[target_header]
 
@@ -44,7 +42,6 @@ def create_model(train_validation_dataset_filepath, target_header, custom_hyperp
 
     # Dump the model as a local file that can be referenced again
     dump(model, 'models/' + tuned_status + '_model.joblib')
-
     return model
 
 # Function that finds the best hyperparameter
@@ -72,12 +69,11 @@ def find_best_hyperparameter(train_validation_dataset_filepath, target_header):
 
     return best_rf
 
-# Function that evaluates the provided ML model using the testing dataset.
+# Function that evaluates the provided ML model using the testing dataset
 def evaluate_model(model, testing_dataset_filepath, target_header, pos_label):
     # Load and split the feature and target data
     X_test = load_data(testing_dataset_filepath)
     X_test = X_test.drop(columns=[target_header])
-
     Y_test = load_data(testing_dataset_filepath)
     Y_test = Y_test[target_header]
 
@@ -96,3 +92,13 @@ def evaluate_model(model, testing_dataset_filepath, target_header, pos_label):
     print("Confusion Matrix: ", conf_matrix)
 
     return accuracy, precision, recall, conf_matrix
+
+# Function that classifies a given URL using the provided ML model
+def classify_url(model, structural_features, statistical_features, url):
+    vector = fe.extract_features(url, structural_features, statistical_features)
+
+    if vector is not None and len(vector) > 0:
+        prediction = model.predict(vector)
+        return vector, prediction
+    return 'Inaccessible / Invalid URL'
+
