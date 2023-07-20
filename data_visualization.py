@@ -9,13 +9,13 @@ def load_data(csv_filepath):
 
     return data
 
-# Function to visualize the binary features' distribution per class
-def visualize_binary_feature_distribution(transformed_dataset_filepath, binary_features, target_header):
+# Function to visualize the structural features' distribution per class
+def visualize_structural_feature_distribution(transformed_dataset_filepath, structural_feature_vectors, target_header):
     # Load the dataset into a DataFrame
     df = load_data(transformed_dataset_filepath)
 
-    # Drop all features that are not binary
-    df = df[binary_features + [target_header]]
+    # Drop all features that are not structural
+    df = df[structural_feature_vectors + [target_header]]
 
     # Replace zeros in the dataset with NaNs (preparing for counting feature presence)
     df = df.replace(0, pd.NaT)
@@ -34,7 +34,7 @@ def visualize_binary_feature_distribution(transformed_dataset_filepath, binary_f
     phishing_counts = grouped_df['phishing'].tolist()
 
     # Get the number of features in the dataset
-    num_features = len(binary_features)
+    num_features = len(structural_feature_vectors)
 
     # Iterate over the lists of counts and add text labels to the bar plots 
     # to represent the count of each feature being present in each class
@@ -54,7 +54,7 @@ def visualize_binary_feature_distribution(transformed_dataset_filepath, binary_f
         fd_plot.text(i, y_coordinate, text_label, ha='center')
 
     # Set title
-    plt.title('Count of Binary Features Across URL Classes', pad=20)
+    plt.title('Count of Structural Features Across URL Classes', pad=20)
 
     # Set and pad y-label for visibility
     plt.ylabel('Count', rotation=0, labelpad=40)
@@ -67,23 +67,23 @@ def visualize_binary_feature_distribution(transformed_dataset_filepath, binary_f
     plt.subplots_adjust(bottom=0.4)
 
     # Add a text box explaining the value format
-    explanation_text = 'Each stacked bar represents the count of instances where the binary feature is present (1) for each class. \n\nFormat: (Legitimate Count, Phishing Count)'
+    explanation_text = 'Each stacked bar represents the count of instances where the structural feature is present (1) for each class. \n\nFormat: (Legitimate Count, Phishing Count)'
     plt.gcf().text(0.02, 0.02, explanation_text, fontsize=12)
 
     # Save the plot as a PNG image
     dataset_filename = transformed_dataset_filepath.split('/')[-1]
     dataset_file_prefix = dataset_filename.split('.')[0]
-    plt.savefig('visualizations/' + dataset_file_prefix + '_binary_feature_distribution.png', dpi=300)
+    plt.savefig('visualizations/' + dataset_file_prefix + '_structural_feature_distribution.png', dpi=300)
 
     return None
 
-# Function to visualize the numerical features' distribution per class
-def visualize_numerical_feature_distribution(transformed_dataset_filepath, numerical_features, target_header):
+# Function to visualize the statistical features' distribution per class
+def visualize_statistical_feature_distribution(transformed_dataset_filepath, statistical_features, target_header):
     # Load the dataset into a DataFrame
     df = load_data(transformed_dataset_filepath)
 
-    # Drop all features that are not numerical
-    df = df[numerical_features + [target_header]]
+    # Drop all features that are not statistical
+    df = df[statistical_features + [target_header]]
 
     # Compute mean value of each feature grouped by each class
     grouped_df = df.groupby(target_header).mean().round(2).T
@@ -99,7 +99,7 @@ def visualize_numerical_feature_distribution(transformed_dataset_filepath, numer
     phishing_counts = grouped_df['phishing'].tolist()
 
     # Get the number of features in the dataset
-    num_features = len(numerical_features)
+    num_features = len(statistical_features)
 
     # Iterate over the lists of counts and add text labels to the bar plots 
     # to represent the count of each feature being present in each class
@@ -119,7 +119,7 @@ def visualize_numerical_feature_distribution(transformed_dataset_filepath, numer
         fd_plot.text(i, y_coordinate, text_label, ha='center')
 
     # Set title
-    plt.title('Mean Value of Numerical Features Across URL Classes', pad=20)
+    plt.title('Mean Value of Statistical Features Across URL Classes', pad=20)
 
     # Set and pad y-label for visibility
     plt.ylabel('Mean Value', rotation=0, labelpad=40)
@@ -132,22 +132,22 @@ def visualize_numerical_feature_distribution(transformed_dataset_filepath, numer
     plt.subplots_adjust(bottom=0.4)
 
     # Add a text box explaining the value format
-    explanation_text = 'Each stacked bar represents the distribution of the numerical feature\nbased on the mean value across both classes.\n\nFormat: (Legitimate Mean Value, Phishing Mean Value)'
+    explanation_text = 'Each stacked bar represents the distribution of the statistical feature\nbased on the mean value across both classes.\n\nFormat: (Legitimate Mean Value, Phishing Mean Value)'
     plt.gcf().text(0.02, 0.02, explanation_text, fontsize=12)
 
     # Save the plot as a PNG image
     dataset_filename = transformed_dataset_filepath.split('/')[-1]
     dataset_file_prefix = dataset_filename.split('.')[0]
-    plt.savefig('visualizations/' + dataset_file_prefix + '_numerical_feature_distribution.png', dpi=300)
+    plt.savefig('visualizations/' + dataset_file_prefix + '_statistical_feature_distribution.png', dpi=300)
 
     return None
 
-# Function to visualize binary feature correlation via heatmap
+# Function to visualize structural feature correlation via heatmap
 def visualize_feature_correlation(transformed_dataset_filepath, feature_type, selected_features, target_header):
     # Load the dataset into a DataFrame
     df = load_data(transformed_dataset_filepath)
 
-    # Drop all features that are not binary
+    # Drop all features that are not selected
     df = df[selected_features + [target_header]]
 
     # Compute correlation matrix
@@ -209,6 +209,6 @@ def visualize_feature_importance(model, train_validation_dataset_filepath, targe
     plt.subplots_adjust(left=0.2)
 
     # Save the plot as a PNG image
-    plt.savefig('visualizations/test_feature_importance.png', dpi=300)
+    plt.savefig('visualizations/url_feature_importance.png', dpi=300)
 
     return None
