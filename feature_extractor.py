@@ -230,7 +230,7 @@ def generate_statistical_feature_vector(url, selected_statistical_features):
                 'nb_star',
                 'nb_colon',
                 'nb_comma',
-                'nb_semicolumn',
+                'nb_semicolon',
                 'nb_dollar',
                 'nb_space',
                 'nb_www',
