@@ -17,16 +17,16 @@ testing_dataset_filepath = "datasets/testing_dataset.csv"
 structural_features = [
     'ip',
     'https_token',
-    'punycode',
-    'port',
-    'tld_in_path',
-    'tld_in_subdomain',
-    'abnormal_subdomain',
+    # 'punycode',
+    # 'port',
+    # 'tld_in_path',
+    # 'tld_in_subdomain',
+    # 'abnormal_subdomain',
     'prefix_suffix',
     'shortening_service',
     'domain_in_brand',
-    'brand_in_subdomain',
-    'brand_in_path',
+    # 'brand_in_subdomain',
+    # 'brand_in_path',
     'suspicious_tld',
     'statistical_report'
 ]
@@ -34,7 +34,7 @@ structural_features = [
 # Statistical URL features
 statistical_features = [
     'length_url',
-    # 'length_hostname',
+    'length_hostname',
     'nb_dots',
     'nb_hyphens',
     # 'nb_at',
@@ -42,32 +42,32 @@ statistical_features = [
     'nb_and',
     # 'nb_or',
     'nb_eq',
-    # 'nb_underscore',
+    'nb_underscore',
     # 'nb_tilde',
     # 'nb_percent',
-    # 'nb_slash',
+    'nb_slash',
     # 'nb_star',
     # 'nb_colon',
     # 'nb_comma',
-    # 'nb_semicolumn',
+    # 'nb_semicolon',
     # 'nb_dollar',
     # 'nb_space',
     'nb_www',
-    # 'nb_com',
+    'nb_com',
     # 'nb_dslash',
     # 'http_in_path',
     'ratio_digits_url',
-    # 'ratio_digits_host',
-    # 'nb_subdomains',
-    # 'nb_redirection',
+    'ratio_digits_host',
+    'nb_subdomains',
+    'nb_redirection',
     # 'nb_external_redirection',
-    # 'length_words_raw',
+    'length_words_raw',
     'char_repeat',
-    # 'shortest_words_raw',
+    'shortest_words_raw',
     'shortest_word_host',
-    # 'shortest_word_path',
+    'shortest_word_path',
     'longest_words_raw',
-    # 'longest_word_host',
+    'longest_word_host',
     'longest_word_path',
     'avg_words_raw',
     'avg_word_host',
@@ -124,7 +124,7 @@ dv.visualize_feature_importance(tuned_trained_model, train_validation_dataset_fi
 # 7. Classify random URL
 # ====================================================================================================
 tuned_trained_model = load_model('models/tuned_model.joblib')
-phishing_url = "http://shadetreetechnology.com/V4/validation/a111aedc8ae390eabcfa130e041a10a4"
+phishing_url = "http://shadetreetechnology.com/V4/validation/a111aedc8ae390eabcfa130e041a10a4" # Retrieved from /datasets/raw_dataset.csv
 
 print('Classifying URL: ' + phishing_url)
 result = classify_url(tuned_trained_model, structural_features, statistical_features, phishing_url)
@@ -134,5 +134,5 @@ if isinstance(result, tuple):
     print(f"Classification: {prediction}")
 else:
     print('Result: ' + result)
-t.sleep(2)
+
 print('\nEnd of program.')
