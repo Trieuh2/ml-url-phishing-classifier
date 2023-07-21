@@ -2,6 +2,7 @@ import concurrent.futures
 import content_features as confe
 import numpy as np
 import pandas as pd
+import random
 import re
 import requests
 import tldextract
@@ -30,9 +31,21 @@ def deadline(timeout):
 # This function tests if the URL is accessible and returns page content that will be used for feature extraction
 @deadline(10)
 def is_URL_accessible(url):
+    # Create a list of user agents to be used for making requests in order to avoid being blocked
+    user_agents = [
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36'
+        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36'
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36'
+        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36'
+        'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36'
+        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.1 Safari/605.1.15'
+        'Mozilla/5.0 (Macintosh; Intel Mac OS X 13_1) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.1 Safari/605.1.15'
+    ]
+
     page = None
     try:
-        page = requests.get(url, timeout=5)   
+        headers = {'User-Agent': random.choice(user_agents)}
+        page = requests.get(url, headers = headers, timeout=5)  
     except:
         parsed = urlparse(url)
         url = parsed.scheme+'://'+parsed.netloc
@@ -55,8 +68,8 @@ def extract_features(url, selected_structural_features, selected_statistical_fea
     statistical_feature_vector = generate_statistical_feature_vector(url, selected_statistical_features)
 
     if statistical_feature_vector is None:
-        print('Statistical feature vector is "None". Skipping feature extraction.')
-        print('This occurs when the URL is invalid or inaccessible.')
+        # Statistical feature vector is "None". Skipping feature extraction.
+        # This occurs when the URL is invalid or inaccessible.
         return None
 
     combined_vector = pd.concat([structural_feature_vector, statistical_feature_vector], axis = 1)

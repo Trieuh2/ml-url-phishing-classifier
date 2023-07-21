@@ -99,6 +99,13 @@ def classify_url(model, structural_features, statistical_features, url):
 
     if vector is not None and len(vector) > 0:
         prediction = model.predict(vector)
+        prediction = str(prediction)
+
+        if prediction == "['phishing']":
+            prediction = 'Phishing'
+        elif prediction == "['legitimate']":
+            prediction = 'Legitimate'
+
         return vector, prediction
     return 'Inaccessible / Invalid URL'
 
