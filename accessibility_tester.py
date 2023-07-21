@@ -51,8 +51,8 @@ raw_dataset_filepath = 'datasets/raw_dataset.csv'
 raw_dataset = dp.load_data(raw_dataset_filepath)
 accessibility_df = pd.DataFrame(columns=['url', 'accessible', 'status'])
 
-# Loop through the first 100 links in the raw dataset's URLs and test if they are accessible
-for index, row in raw_dataset.head(100).iterrows():
+# Loop through the last 100 links in the raw dataset's URLs and test if they are accessible
+for index, row in raw_dataset.tail(100).iterrows():
     print("Checking URL: " + row['url'])
 
     url = row['url']
