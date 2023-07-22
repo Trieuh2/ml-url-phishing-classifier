@@ -10,9 +10,9 @@ def load_data(csv_filepath):
     return data
 
 # Function to visualize the structural features' distribution per class
-def visualize_structural_feature_distribution(transformed_dataset_filepath, structural_feature_vectors, target_header):
+def visualize_structural_feature_distribution(transformed_dataset_filepath, structural_features, target_header):
     df = load_data(transformed_dataset_filepath)
-    df = df[structural_feature_vectors + [target_header]]
+    df = df[structural_features + [target_header]]
     df = df.replace(0, pd.NaT)
 
     # Compute count of each feature grouped by each class
@@ -30,7 +30,7 @@ def visualize_structural_feature_distribution(transformed_dataset_filepath, stru
     phishing_counts = grouped_df['phishing'].tolist()
 
     # Get the number of features in the dataset
-    num_features = len(structural_feature_vectors)
+    num_features = len(structural_features)
 
     # Iterate over the lists of counts and add text labels to the bar plots 
     # to represent the count of each feature being present in each class
@@ -73,7 +73,6 @@ def visualize_structural_feature_distribution(transformed_dataset_filepath, stru
     dataset_file_prefix = dataset_filename.split('.')[0]
     plt.savefig('visualizations/' + dataset_file_prefix + '_structural_feature_distribution.png', dpi=300)
 
-    plt.autoscale
     return None
 
 # Function to visualize the statistical features' distribution per class
@@ -183,14 +182,15 @@ def visualize_feature_importance(model, train_validation_dataset_filepath, targe
 
     # Plot the data
     barplot = sns.barplot(x=feature_importances.values, y=feature_importances.index, palette='crest')
-    plt.autoscale()
 
     # Set x-limits of the plot to ensure labels fit within the figure
     plt.xlim(0, max(feature_importances.values) * 1.1)
+    x_offset = 0.0005
+    y_offset = 0.25
 
     # Annotate the feature importance values adjacent to each bar
     for index, value in enumerate(feature_importances):
-        barplot.text(value + 0.0005, index + 0.25, str(round(value, 3)))
+        barplot.text(value + x_offset, index + y_offset, str(round(value, 3)))
 
     # Set title
     plt.title('URL Feature Importances', pad=20)
