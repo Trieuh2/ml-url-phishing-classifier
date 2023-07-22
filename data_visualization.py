@@ -11,13 +11,8 @@ def load_data(csv_filepath):
 
 # Function to visualize the structural features' distribution per class
 def visualize_structural_feature_distribution(transformed_dataset_filepath, structural_feature_vectors, target_header):
-    # Load the dataset into a DataFrame
     df = load_data(transformed_dataset_filepath)
-
-    # Drop all features that are not structural
     df = df[structural_feature_vectors + [target_header]]
-
-    # Replace zeros in the dataset with NaNs (preparing for counting feature presence)
     df = df.replace(0, pd.NaT)
 
     # Compute count of each feature grouped by each class
@@ -25,6 +20,7 @@ def visualize_structural_feature_distribution(transformed_dataset_filepath, stru
 
     # Plot data
     fd_plot = grouped_df.plot(kind='bar', stacked=True, figsize=(15, 6))
+    plt.autoscale()
 
     # Set y-limits of the plot to ensure labels fit within the figure
     plt.ylim(0, grouped_df.values.max() * 2.05)
@@ -38,13 +34,15 @@ def visualize_structural_feature_distribution(transformed_dataset_filepath, stru
 
     # Iterate over the lists of counts and add text labels to the bar plots 
     # to represent the count of each feature being present in each class
+    y_offset = grouped_df.values.max() * 0.05
+
     for i in range(num_features):
         # Get the 'legitimate' and 'phishing' count for the current feature
         legitimate_count = legitimate_counts[i]
         phishing_count = phishing_counts[i]
         
         # Calculate the y-coordinate for the text (on top of the stacked bars)
-        y_coordinate = (legitimate_count + phishing_count) + (grouped_df.values.max() * 0.05)
+        y_coordinate = (legitimate_count + phishing_count) + y_offset
         
         # Create the text label in the format of '(legitimate_count, phishing_count)'
         text_label = f'({legitimate_count}, {phishing_count})'
@@ -75,22 +73,19 @@ def visualize_structural_feature_distribution(transformed_dataset_filepath, stru
     dataset_file_prefix = dataset_filename.split('.')[0]
     plt.savefig('visualizations/' + dataset_file_prefix + '_structural_feature_distribution.png', dpi=300)
 
+    plt.autoscale
     return None
 
 # Function to visualize the statistical features' distribution per class
 def visualize_statistical_feature_distribution(transformed_dataset_filepath, statistical_features, target_header):
-    # Load the dataset into a DataFrame
     df = load_data(transformed_dataset_filepath)
-
-    # Drop all features that are not statistical
     df = df[statistical_features + [target_header]]
-
-    # Compute mean value of each feature grouped by each class
     grouped_df = df.groupby(target_header).mean().round(2).T
 
     # Plot data
     fd_plot = grouped_df.plot(kind='bar', stacked=True, figsize=(15, 6), color=['seagreen', 'orange'])
-
+    plt.autoscale()
+    
     # Set y-limits of the plot to ensure labels fit within the figure
     plt.ylim(0, grouped_df.values.max() * 2.05)
 
@@ -103,13 +98,15 @@ def visualize_statistical_feature_distribution(transformed_dataset_filepath, sta
 
     # Iterate over the lists of counts and add text labels to the bar plots 
     # to represent the count of each feature being present in each class
+    y_offset = grouped_df.values.max() * 0.05
+
     for i in range(num_features):
         # Get the 'legitimate' and 'phishing' count for the current feature
         legitimate_count = legitimate_counts[i]
         phishing_count = phishing_counts[i]
         
         # Calculate the y-coordinate for the text (on top of the stacked bars)
-        y_coordinate = (legitimate_count + phishing_count) + (grouped_df.values.max() * 0.05)
+        y_coordinate = (legitimate_count + phishing_count) + y_offset
         
         # Create the text label in the format of '(legitimate_count, phishing_count)'
         text_label = f'({legitimate_count}, {phishing_count})'
@@ -144,13 +141,8 @@ def visualize_statistical_feature_distribution(transformed_dataset_filepath, sta
 
 # Function to visualize structural feature correlation via heatmap
 def visualize_feature_correlation(transformed_dataset_filepath, feature_type, selected_features, target_header):
-    # Load the dataset into a DataFrame
     df = load_data(transformed_dataset_filepath)
-
-    # Drop all features that are not selected
     df = df[selected_features + [target_header]]
-
-    # Compute correlation matrix
     corr_matrix = df.corr()
 
     # Create a large figure to allow enough space for the heatmap
@@ -160,7 +152,8 @@ def visualize_feature_correlation(transformed_dataset_filepath, feature_type, se
     plt.title('Correlation Matrix of ' + feature_type + ' Features', pad=20)
 
     # Plot data
-    corr_plot = sns.heatmap(corr_matrix, annot=True)
+    sns.heatmap(corr_matrix, annot=True)
+    plt.autoscale()
 
     # Rotate x-axis labels to horizontal and set tight layout to prevent overlapping labels
     plt.xticks(rotation=45)
@@ -190,6 +183,7 @@ def visualize_feature_importance(model, train_validation_dataset_filepath, targe
 
     # Plot the data
     barplot = sns.barplot(x=feature_importances.values, y=feature_importances.index, palette='crest')
+    plt.autoscale()
 
     # Set x-limits of the plot to ensure labels fit within the figure
     plt.xlim(0, max(feature_importances.values) * 1.1)
