@@ -99,7 +99,7 @@ if (len(statistical_features) > 0):
 # ====================================================================================================
 print('untuned model:')
 untuned_trained_model = create_model(train_validation_dataset_filepath, target_header, None)
-untuned_training_results = evaluate_model(untuned_trained_model, testing_dataset_filepath, target_header, pos_label)
+untuned_training_results = evaluate_model(untuned_trained_model, testing_dataset_filepath, target_header, pos_label, 'models/untuned_model_evaluation_results.txt')
 
 # ====================================================================================================
 # 4. Find best hyperparameter settings
@@ -112,27 +112,28 @@ print('\nbest hyperparameter settings:' + str(best_hp_settings))
 # ====================================================================================================
 print('\ntuned model:')
 tuned_trained_model = create_model(train_validation_dataset_filepath, target_header, best_hp_settings)
-tuned_training_results = evaluate_model(tuned_trained_model, testing_dataset_filepath, target_header, pos_label)
+tuned_training_results = evaluate_model(tuned_trained_model, testing_dataset_filepath, target_header, pos_label, 'models/tuned_model_evaluation_results.txt')
 
-# ====================================================================================================
-# 6. Visualize feature importance
-# ====================================================================================================
-tuned_trained_model = load_model('models/tuned_model.joblib')
-dv.visualize_feature_importance(tuned_trained_model, train_validation_dataset_filepath, target_header)
+# # ====================================================================================================
+# # 6. Visualize feature importance
+# # ====================================================================================================
+# tuned_trained_model = load_model('models/tuned_model.joblib')
+# dv.visualize_feature_importance(tuned_trained_model, train_validation_dataset_filepath, target_header)
 
-# ====================================================================================================
-# 7. Classify random URL
-# ====================================================================================================
-tuned_trained_model = load_model('models/tuned_model.joblib')
-phishing_url = "http://shadetreetechnology.com/V4/validation/a111aedc8ae390eabcfa130e041a10a4" # Retrieved from /datasets/raw_dataset.csv
 
-print('Classifying URL: ' + phishing_url)
-result = classify_url(tuned_trained_model, structural_features, statistical_features, phishing_url)
+# # ====================================================================================================
+# # 7. Classify random URL
+# # ====================================================================================================
+# tuned_trained_model = load_model('models/tuned_model.joblib')
+# phishing_url = "http://shadetreetechnology.com/V4/validation/a111aedc8ae390eabcfa130e041a10a4" # Retrieved from /datasets/raw_dataset.csv
 
-if isinstance(result, tuple):
-    vector, prediction = result
-    print(f"Classification: {prediction}")
-else:
-    print('Result: ' + result)
+# print('Classifying URL: ' + phishing_url)
+# result = classify_url(tuned_trained_model, structural_features, statistical_features, phishing_url)
 
-print('\nEnd of program.')
+# if isinstance(result, tuple):
+#     vector, prediction = result
+#     print(f"Classification: {prediction}")
+# else:
+#     print('Result: ' + result)
+
+# print('\nEnd of program.')

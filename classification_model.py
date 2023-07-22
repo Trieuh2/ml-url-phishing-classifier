@@ -70,7 +70,7 @@ def find_best_hyperparameter(train_validation_dataset_filepath, target_header):
     return best_rf
 
 # Function that evaluates the provided ML model using the testing dataset
-def evaluate_model(model, testing_dataset_filepath, target_header, pos_label):
+def evaluate_model(model, testing_dataset_filepath, target_header, pos_label, eval_output_filepath):
     # Load and split the feature and target data
     X_test = load_data(testing_dataset_filepath)
     X_test = X_test.drop(columns=[target_header])
@@ -86,6 +86,14 @@ def evaluate_model(model, testing_dataset_filepath, target_header, pos_label):
     recall = recall_score(Y_test, Y_pred, pos_label=pos_label)
     conf_matrix = confusion_matrix(Y_test, Y_pred)
 
+    # Save the evaluation results to a text file
+    with open(eval_output_filepath, 'w') as f:
+        f.write("Accuracy: " + str(accuracy) + "\n")
+        f.write("Precision: " + str(precision) + "\n")
+        f.write("Recall: " + str(recall) + "\n")
+        f.write("Confusion Matrix: " + str(conf_matrix) + "\n")
+
+    # Print out the performance metrics
     print("Accuracy: ", accuracy)
     print("Precision: ", precision)
     print("Recall: ", recall)
