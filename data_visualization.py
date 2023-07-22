@@ -82,7 +82,7 @@ def visualize_statistical_feature_distribution(transformed_dataset_filepath, sta
     grouped_df = df.groupby(target_header).mean().round(2).T
 
     # Plot data
-    fd_plot = grouped_df.plot(kind='bar', stacked=True, figsize=(15, 6), color=['seagreen', 'orange'])
+    fd_plot = grouped_df.plot(kind='bar', stacked=True, figsize=(20, 6), color=['seagreen', 'orange'])
     plt.autoscale()
     
     # Set y-limits of the plot to ensure labels fit within the figure
@@ -185,8 +185,8 @@ def visualize_feature_importance(model, train_validation_dataset_filepath, targe
 
     # Set x-limits of the plot to ensure labels fit within the figure
     plt.xlim(0, max(feature_importances.values) * 1.1)
-    x_offset = 0.0005
-    y_offset = 0.25
+    x_offset = max(feature_importances.values) * 0.005
+    y_offset = 0.4
 
     # Annotate the feature importance values adjacent to each bar
     for index, value in enumerate(feature_importances):
@@ -196,8 +196,8 @@ def visualize_feature_importance(model, train_validation_dataset_filepath, targe
     plt.title('URL Feature Importances', pad=20)
 
     # Set and pad y-label for visibility
-    plt.ylabel('Feature', rotation=90, labelpad=5)
-    plt.xlabel('Relative Importance', labelpad=5)
+    plt.ylabel('Feature', rotation=90, labelpad=10)
+    plt.xlabel('Relative Importance', labelpad=10)
 
     # Adjust the margins of the plot
     plt.subplots_adjust(left=0.2)

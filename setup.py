@@ -19,12 +19,12 @@ structural_features = [
     'https_token',
     # 'punycode',
     # 'port',
-    # 'tld_in_path',
+    'tld_in_path',
     # 'tld_in_subdomain',
-    # 'abnormal_subdomain',
+    'abnormal_subdomain',
     'prefix_suffix',
     'shortening_service',
-    'domain_in_brand',
+    # 'domain_in_brand',
     # 'brand_in_subdomain',
     # 'brand_in_path',
     'suspicious_tld',
@@ -39,12 +39,12 @@ statistical_features = [
     'nb_hyphens',
     # 'nb_at',
     'nb_qm',
-    'nb_and',
+    # 'nb_and',
     # 'nb_or',
-    'nb_eq',
-    'nb_underscore',
+    # 'nb_eq',
+    # 'nb_underscore',
     # 'nb_tilde',
-    # 'nb_percent',
+    'nb_percent',
     'nb_slash',
     # 'nb_star',
     # 'nb_colon',
@@ -53,22 +53,22 @@ statistical_features = [
     # 'nb_dollar',
     # 'nb_space',
     'nb_www',
-    'nb_com',
+    # 'nb_com',
     # 'nb_dslash',
-    # 'http_in_path',
+    'http_in_path',
     'ratio_digits_url',
     'ratio_digits_host',
-    'nb_subdomains',
-    'nb_redirection',
+    # 'nb_subdomains',
+    # 'nb_redirection',
     # 'nb_external_redirection',
-    'length_words_raw',
+    # 'length_words_raw',
     'char_repeat',
-    'shortest_words_raw',
-    'shortest_word_host',
-    'shortest_word_path',
-    'longest_words_raw',
-    'longest_word_host',
-    'longest_word_path',
+    # 'shortest_words_raw',
+    # 'shortest_word_host',
+    # 'shortest_word_path',
+    # 'longest_words_raw',
+    # 'longest_word_host',
+    # 'longest_word_path',
     'avg_words_raw',
     'avg_word_host',
     'avg_word_path',
@@ -89,10 +89,10 @@ dp.preprocess_data(raw_data_filepath, selected_features, target_header)
 # ====================================================================================================
 if (len(structural_features) > 0):
     dv.visualize_structural_feature_distribution(transformed_dataset_filepath, structural_features, target_header)
-    dv.visualize_feature_correlation(transformed_dataset_filepath, 'structural', structural_features, target_header)
+    dv.visualize_feature_correlation(transformed_dataset_filepath, 'Structural', structural_features, target_header)
 if (len(statistical_features) > 0):
     dv.visualize_statistical_feature_distribution(transformed_dataset_filepath, statistical_features, target_header)
-    dv.visualize_feature_correlation(transformed_dataset_filepath, 'statistical', statistical_features, target_header)
+    dv.visualize_feature_correlation(transformed_dataset_filepath, 'Statistical', statistical_features, target_header)
 
 # ====================================================================================================
 # # 3. Create an untuned model
@@ -114,12 +114,11 @@ print('\ntuned model:')
 tuned_trained_model = create_model(train_validation_dataset_filepath, target_header, best_hp_settings)
 tuned_training_results = evaluate_model(tuned_trained_model, testing_dataset_filepath, target_header, pos_label, 'models/tuned_model_evaluation_results.txt')
 
-# # ====================================================================================================
-# # 6. Visualize feature importance
-# # ====================================================================================================
-# tuned_trained_model = load_model('models/tuned_model.joblib')
-# dv.visualize_feature_importance(tuned_trained_model, train_validation_dataset_filepath, target_header)
-
+# ====================================================================================================
+# 6. Visualize feature importance
+# ====================================================================================================
+tuned_trained_model = load_model('models/tuned_model.joblib')
+dv.visualize_feature_importance(tuned_trained_model, train_validation_dataset_filepath, target_header)
 
 # # ====================================================================================================
 # # 7. Classify random URL
