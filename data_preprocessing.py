@@ -38,10 +38,6 @@ def split_transformed_data(transformed_data):
     train_val_data = pd.concat([phishing_train_val_data, legitimate_train_val_data])
     test_data = pd.concat([phishing_test_data, legitimate_test_data])
 
-    # Shuffle the train-validation and testing datasets
-    train_val_data = train_val_data.sample(frac=1, random_state=0)
-    test_data = test_data.sample(frac=1, random_state=0)
-
     # Save the train-validation and testing datasets to CSV files
     train_val_data.to_csv('datasets/train_validation_dataset.csv', index=False)
     test_data.to_csv('datasets/testing_dataset.csv', index=False)
