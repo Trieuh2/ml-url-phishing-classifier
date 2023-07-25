@@ -22,11 +22,6 @@ def extract_features(url, selected_structural_features, selected_statistical_fea
     structural_feature_vector = generate_structural_feature_vector(url, selected_structural_features)
     statistical_feature_vector = generate_statistical_feature_vector(url, selected_statistical_features)
 
-    if statistical_feature_vector is None:
-        # Statistical feature vector is "None". Skipping feature extraction.
-        # This occurs when the URL is invalid, inaccessible, or the URL accessibility test has purposefully thrown an exception after 10 seconds (fail-safe).
-        return None
-
     combined_vector = pd.concat([structural_feature_vector, statistical_feature_vector], axis = 1)
     return combined_vector
 
