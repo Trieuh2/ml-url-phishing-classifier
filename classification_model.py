@@ -93,27 +93,30 @@ def evaluate_model(model, testing_dataset_filepath, target_header, pos_label, ev
         f.write("Recall: " + str(recall) + "\n")
         f.write("Confusion Matrix: " + str(conf_matrix) + "\n")
 
-    # Print out the performance metrics
+    return accuracy, precision, recall, conf_matrix
+
+# Function that prints out the performance metrics
+def print_performance_metrics(accuracy, precision, recall, conf_matrix):
     print("Accuracy: ", accuracy)
     print("Precision: ", precision)
     print("Recall: ", recall)
     print("Confusion Matrix: ", conf_matrix)
+    print()
 
-    return accuracy, precision, recall, conf_matrix
 
 # Function that classifies a given URL using the provided ML model
 def classify_url(model, structural_features, statistical_features, url):
-    vector = fe.extract_features(url, structural_features, statistical_features)
+    if (url.startswith('http://') or url.startswith('https://')):
+        vector = fe.extract_features(url, structural_features, statistical_features)
 
-    if vector is not None and len(vector) > 0:
-        prediction = model.predict(vector)
-        prediction = str(prediction)
+        if vector is not None and len(vector) > 0:
+            prediction = model.predict(vector)
+            prediction = str(prediction)
 
-        if prediction == "['phishing']":
-            prediction = 'Phishing'
-        elif prediction == "['legitimate']":
-            prediction = 'Legitimate'
-
-        return vector, prediction
-    return 'Inaccessible / Invalid URL'
+            if prediction == "['phishing']":
+                return 'Phishing'
+            elif prediction == "['legitimate']":
+                return 'Legitimate'
+    else:
+        return 'Invalid URL'
 

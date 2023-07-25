@@ -17,51 +17,6 @@ def get_domain(url):
     o = urllib.parse.urlsplit(url)
     return o.hostname, tldextract.extract(url).domain, o.path
 
-# This function returns a timeout decorator that will raise an exception if the function takes longer than the specified timeout
-def deadline(timeout):
-    def decorate(f):
-        def new_f(*args, **kwargs):
-            with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
-                future = executor.submit(f, *args, **kwargs)
-                return future.result(timeout=timeout)
-        new_f.__name__ = f.__name__
-        return new_f
-    return decorate
-
-# This function tests if the URL is accessible and returns page content that will be used for feature extraction
-@deadline(10)
-def is_URL_accessible(url):
-    # Create a list of user agents to be used for making requests in order to avoid being blocked
-    user_agents = [
-        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36'
-        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36'
-        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36'
-        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36'
-        'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36'
-        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.1 Safari/605.1.15'
-        'Mozilla/5.0 (Macintosh; Intel Mac OS X 13_1) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.1 Safari/605.1.15'
-    ]
-
-    page = None
-    try:
-        headers = {'User-Agent': random.choice(user_agents)}
-        page = requests.get(url, headers = headers, timeout=5)  
-    except:
-        parsed = urlparse(url)
-        url = parsed.scheme+'://'+parsed.netloc
-        if not parsed.netloc.startswith('www'):
-            url = parsed.scheme+'://www.'+parsed.netloc
-            try:
-                page = requests.get(url, timeout=5)
-            except:
-                page = None
-                pass
-
-    if page and page.status_code == 200 and page.content not in ["b''", "b' '"]:
-        return True, url, page
-    else:
-        return False, None, None
-
 # Function that performs both structural and statistical feature extractions on the provided URL and returns a combined vector
 def extract_features(url, selected_structural_features, selected_statistical_features):
     structural_feature_vector = generate_structural_feature_vector(url, selected_structural_features)
@@ -96,7 +51,7 @@ def extract_structural_features(url, scheme, domain, subdomain, extracted_domain
     return row
 
 # Helper function that extracts the statistical features of the URL
-def extract_statistical_features(url, page, hostname, domain, path, words_raw, words_raw_host, words_raw_path):
+def extract_statistical_features(url, hostname, path, words_raw, words_raw_host, words_raw_path):
     row = [
         urlfe.url_length(url),
         urlfe.url_length(hostname),
@@ -124,8 +79,6 @@ def extract_statistical_features(url, page, hostname, domain, path, words_raw, w
         urlfe.ratio_digits(url),
         urlfe.ratio_digits(hostname),
         urlfe.count_subdomain(url),          
-        urlfe.count_redirection(page),
-        urlfe.count_external_redirection(page, domain),
         urlfe.length_word_raw(words_raw),
         urlfe.char_repeat(words_raw),
         urlfe.shortest_word_length(words_raw),
@@ -143,15 +96,6 @@ def extract_statistical_features(url, page, hostname, domain, path, words_raw, w
 
 # Function that performs data pre-processing, extracts the structural features of the URL and returns the results as a list
 def generate_structural_feature_vector(url, selected_structural_features):
-    def words_raw_extraction(domain, subdomain, path):
-        w_domain = re.split("\-|\.|\/|\?|\=|\@|\&|\%|\:|\_", domain.lower())
-        w_subdomain = re.split("\-|\.|\/|\?|\=|\@|\&|\%|\:|\_", subdomain.lower())   
-        w_path = re.split("\-|\.|\/|\?|\=|\@|\&|\%|\:|\_", path.lower())
-        raw_words = w_domain + w_path + w_subdomain
-        w_host = w_domain + w_subdomain
-        raw_words = list(filter(None,raw_words))
-        return raw_words, list(filter(None,w_host)), list(filter(None,w_path))
-
     hostname, domain, path = get_domain(url)
     extracted_domain = tldextract.extract(url)
     domain = extracted_domain.domain+'.'+extracted_domain.suffix
@@ -159,7 +103,6 @@ def generate_structural_feature_vector(url, selected_structural_features):
     tmp = url[url.find(extracted_domain.suffix):len(url)]
     pth = tmp.partition("/")
     path = pth[1] + pth[2]
-    words_raw, words_raw_host, words_raw_path= words_raw_extraction(extracted_domain.domain, subdomain, pth[2])
     tld = extracted_domain.suffix
     parsed = urlparse(url)
     scheme = parsed.scheme
@@ -197,66 +140,55 @@ def generate_statistical_feature_vector(url, selected_statistical_features):
         raw_words = list(filter(None,raw_words))
         return raw_words, list(filter(None,w_host)), list(filter(None,w_path))
 
-    try:
-        state, iurl, page = is_URL_accessible(url)
-        if state:
-            hostname, domain, path = get_domain(url)
-            extracted_domain = tldextract.extract(url)
-            domain = extracted_domain.domain+'.'+extracted_domain.suffix
-            subdomain = extracted_domain.subdomain
-            tmp = url[url.find(extracted_domain.suffix):len(url)]
-            pth = tmp.partition("/")
-            path = pth[1] + pth[2]
-            words_raw, words_raw_host, words_raw_path= words_raw_extraction(extracted_domain.domain, subdomain, pth[2])
-            tld = extracted_domain.suffix
-            parsed = urlparse(url)
-            scheme = parsed.scheme
-            
-            res = extract_statistical_features(url, page, hostname, domain, path, words_raw, words_raw_host, words_raw_path)
-            all_statistical_features = [
-                'length_url',
-                'length_hostname',
-                'nb_dots',
-                'nb_hyphens',
-                'nb_at',
-                'nb_qm',
-                'nb_and',
-                'nb_or',
-                'nb_eq',
-                'nb_underscore',
-                'nb_tilde',
-                'nb_percent',
-                'nb_slash',
-                'nb_star',
-                'nb_colon',
-                'nb_comma',
-                'nb_semicolon',
-                'nb_dollar',
-                'nb_space',
-                'nb_www',
-                'nb_com',
-                'nb_dslash',
-                'http_in_path',
-                'ratio_digits_url',
-                'ratio_digits_host',
-                'nb_subdomains',
-                'nb_redirection',
-                'nb_external_redirection',
-                'length_words_raw',
-                'char_repeat',
-                'shortest_words_raw',
-                'shortest_word_host',
-                'shortest_word_path',
-                'longest_words_raw',
-                'longest_word_host',
-                'longest_word_path',
-                'avg_words_raw',
-                'avg_word_host',
-                'avg_word_path',
-                'phish_hints'
-            ]
-        df = pd.DataFrame([res], columns=all_statistical_features)
-        statistical_feature_vector = df[selected_statistical_features]
-        return statistical_feature_vector
-    except:
-        return None
+    hostname, domain, path = get_domain(url)
+    extracted_domain = tldextract.extract(url)
+    subdomain = extracted_domain.subdomain
+    tmp = url[url.find(extracted_domain.suffix):len(url)]
+    pth = tmp.partition("/")
+    path = pth[1] + pth[2]
+    words_raw, words_raw_host, words_raw_path= words_raw_extraction(extracted_domain.domain, subdomain, pth[2])
+    
+    res = extract_statistical_features(url, hostname, path, words_raw, words_raw_host, words_raw_path)
+    all_statistical_features = [
+        'length_url',
+        'length_hostname',
+        'nb_dots',
+        'nb_hyphens',
+        'nb_at',
+        'nb_qm',
+        'nb_and',
+        'nb_or',
+        'nb_eq',
+        'nb_underscore',
+        'nb_tilde',
+        'nb_percent',
+        'nb_slash',
+        'nb_star',
+        'nb_colon',
+        'nb_comma',
+        'nb_semicolon',
+        'nb_dollar',
+        'nb_space',
+        'nb_www',
+        'nb_com',
+        'nb_dslash',
+        'http_in_path',
+        'ratio_digits_url',
+        'ratio_digits_host',
+        'nb_subdomains',
+        'length_words_raw',
+        'char_repeat',
+        'shortest_words_raw',
+        'shortest_word_host',
+        'shortest_word_path',
+        'longest_words_raw',
+        'longest_word_host',
+        'longest_word_path',
+        'avg_words_raw',
+        'avg_word_host',
+        'avg_word_path',
+        'phish_hints'
+    ]
+    df = pd.DataFrame([res], columns=all_statistical_features)
+    statistical_feature_vector = df[selected_statistical_features]
+    return statistical_feature_vector
