@@ -69,7 +69,7 @@ def extract_features(url, selected_structural_features, selected_statistical_fea
 
     if statistical_feature_vector is None:
         # Statistical feature vector is "None". Skipping feature extraction.
-        # This occurs when the URL is invalid or inaccessible.
+        # This occurs when the URL is invalid, inaccessible, or the URL accessibility test has purposefully thrown an exception after 10 seconds (fail-safe).
         return None
 
     combined_vector = pd.concat([structural_feature_vector, statistical_feature_vector], axis = 1)

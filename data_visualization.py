@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
 import seaborn as sns
 
@@ -13,7 +14,7 @@ def load_data(csv_filepath):
 def visualize_structural_feature_distribution(transformed_dataset_filepath, structural_features, target_header):
     df = load_data(transformed_dataset_filepath)
     df = df[structural_features + [target_header]]
-    df = df.replace(0, pd.NaN)
+    df = df.replace(0, np.NaN)
 
     # Compute count of each feature grouped by each class
     grouped_df = df.groupby(target_header).count().T
