@@ -5,7 +5,7 @@ import feature_extractor as fe
 import pandas as pd
 import time as t
 
-from classification_model import classify_url, create_model, evaluate_model, find_best_hyperparameter, load_model
+from classification_model import classify_url, create_model, evaluate_model, find_best_hyperparameter, load_model, print_performance_metrics
 
 # Define dataset paths
 raw_data_filepath = 'datasets/raw_dataset.csv'
@@ -19,9 +19,9 @@ structural_features = [
     'https_token',
     # 'punycode',
     # 'port',
-    'tld_in_path',
+    # 'tld_in_path',
     # 'tld_in_subdomain',
-    'abnormal_subdomain',
+    # 'abnormal_subdomain',
     'prefix_suffix',
     'shortening_service',
     # 'domain_in_brand',
@@ -55,12 +55,10 @@ statistical_features = [
     'nb_www',
     # 'nb_com',
     # 'nb_dslash',
-    'http_in_path',
+    # 'http_in_path',
     'ratio_digits_url',
     'ratio_digits_host',
     # 'nb_subdomains',
-    # 'nb_redirection',
-    # 'nb_external_redirection',
     # 'length_words_raw',
     'char_repeat',
     # 'shortest_words_raw',
@@ -99,20 +97,22 @@ if (len(statistical_features) > 0):
 # ====================================================================================================
 print('untuned model:')
 untuned_trained_model = create_model(train_validation_dataset_filepath, target_header, None)
-untuned_training_results = evaluate_model(untuned_trained_model, testing_dataset_filepath, target_header, pos_label, 'models/untuned_model_evaluation_results.txt')
+ut_accuracy, ut_precision, ut_recall, ut_conf_matrix = evaluate_model(untuned_trained_model, testing_dataset_filepath, target_header, pos_label, 'models/untuned_model_evaluation_results.txt')
+print_performance_metrics(ut_accuracy, ut_precision, ut_recall, ut_conf_matrix)
 
 # ====================================================================================================
 # 4. Find best hyperparameter settings
 # ====================================================================================================
 best_hp_settings = find_best_hyperparameter(train_validation_dataset_filepath, target_header)
-print('\nbest hyperparameter settings:' + str(best_hp_settings))
+print('best hyperparameter settings:' + str(best_hp_settings) + '\n')
 
 # ====================================================================================================
 # 5. Create a tuned model
 # ====================================================================================================
-print('\ntuned model:')
+print('tuned model:')
 tuned_trained_model = create_model(train_validation_dataset_filepath, target_header, best_hp_settings)
-tuned_training_results = evaluate_model(tuned_trained_model, testing_dataset_filepath, target_header, pos_label, 'models/tuned_model_evaluation_results.txt')
+t_accuracy, t_precision, t_recall, t_conf_matrix = evaluate_model(tuned_trained_model, testing_dataset_filepath, target_header, pos_label, 'models/tuned_model_evaluation_results.txt')
+print_performance_metrics(t_accuracy, t_precision, t_recall, t_conf_matrix)
 
 # ====================================================================================================
 # 6. Visualize feature importance
@@ -120,19 +120,18 @@ tuned_training_results = evaluate_model(tuned_trained_model, testing_dataset_fil
 tuned_trained_model = load_model('models/tuned_model.joblib')
 dv.visualize_feature_importance(tuned_trained_model, train_validation_dataset_filepath, target_header)
 
-# # ====================================================================================================
-# # 7. Classify random URL
-# # ====================================================================================================
-# tuned_trained_model = load_model('models/tuned_model.joblib')
-# phishing_url = "http://shadetreetechnology.com/V4/validation/a111aedc8ae390eabcfa130e041a10a4" # Retrieved from /datasets/raw_dataset.csv
+# ====================================================================================================
+# 7. Classify random URL
+# ====================================================================================================
+tuned_trained_model = load_model('models/tuned_model.joblib')
+phishing_url = "http://shadetreetechnology.com/V4/validation/a111aedc8ae390eabcfa130e041a10a4" # Retrieved from /datasets/raw_dataset.csv
 
-# print('Classifying URL: ' + phishing_url)
-# result = classify_url(tuned_trained_model, structural_features, statistical_features, phishing_url)
+print('Classifying Phishing URL: ' + phishing_url)
+result = classify_url(tuned_trained_model, structural_features, statistical_features, phishing_url)
+print('Result: ' + result + '\n')
 
-# if isinstance(result, tuple):
-#     vector, prediction = result
-#     print(f"Classification: {prediction}")
-# else:
-#     print('Result: ' + result)
-
-# print('\nEnd of program.')
+# ====================================================================================================
+# Setup Completion
+# ====================================================================================================
+print('Setup complete.')
+print('End of program.')

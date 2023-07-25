@@ -5,7 +5,7 @@ import feature_extractor as fe
 import pandas as pd
 import time as t
 
-from classification_model import classify_url, create_model, evaluate_model, find_best_hyperparameter, load_model
+from classification_model import classify_url, load_model
 
 # Define dataset paths
 raw_data_filepath = 'datasets/raw_dataset.csv'
@@ -24,7 +24,7 @@ structural_features = [
     # 'abnormal_subdomain',
     'prefix_suffix',
     'shortening_service',
-    'domain_in_brand',
+    # 'domain_in_brand',
     # 'brand_in_subdomain',
     # 'brand_in_path',
     'suspicious_tld',
@@ -39,12 +39,12 @@ statistical_features = [
     'nb_hyphens',
     # 'nb_at',
     'nb_qm',
-    'nb_and',
+    # 'nb_and',
     # 'nb_or',
-    'nb_eq',
-    'nb_underscore',
+    # 'nb_eq',
+    # 'nb_underscore',
     # 'nb_tilde',
-    # 'nb_percent',
+    'nb_percent',
     'nb_slash',
     # 'nb_star',
     # 'nb_colon',
@@ -53,22 +53,20 @@ statistical_features = [
     # 'nb_dollar',
     # 'nb_space',
     'nb_www',
-    'nb_com',
+    # 'nb_com',
     # 'nb_dslash',
     # 'http_in_path',
     'ratio_digits_url',
     'ratio_digits_host',
-    'nb_subdomains',
-    'nb_redirection',
-    # 'nb_external_redirection',
-    'length_words_raw',
+    # 'nb_subdomains',
+    # 'length_words_raw',
     'char_repeat',
-    'shortest_words_raw',
-    'shortest_word_host',
-    'shortest_word_path',
-    'longest_words_raw',
-    'longest_word_host',
-    'longest_word_path',
+    # 'shortest_words_raw',
+    # 'shortest_word_host',
+    # 'shortest_word_path',
+    # 'longest_words_raw',
+    # 'longest_word_host',
+    # 'longest_word_path',
     'avg_words_raw',
     'avg_word_host',
     'avg_word_path',
@@ -86,11 +84,5 @@ while not exit:
         break
     else:
         result = classify_url(tuned_trained_model, structural_features, statistical_features, user_input)
-
-        if isinstance(result, tuple):
-            vector, prediction = result
-            print(f"Classification: {prediction}")
-        else:
-            print('\nResult: ' + result)
+        print('\nResult: ' + result + '\n')
         t.sleep(1)
-        print()
