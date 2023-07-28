@@ -1,15 +1,11 @@
-import concurrent.futures
 import content_features as confe
 import numpy as np
 import pandas as pd
-import random
 import re
-import requests
 import tldextract
 import url_features as urlfe
 import urllib.parse
 
-from bs4 import BeautifulSoup
 from urllib.parse import urlparse
 
 # Function that extracts the hostname, domain, and path of the URL provided
@@ -41,7 +37,7 @@ def extract_structural_features(url, scheme, domain, subdomain, extracted_domain
         urlfe.brand_in_path(extracted_domain.domain,subdomain),
         urlfe.brand_in_path(extracted_domain.domain,path),
         urlfe.suspicious_tld(tld),
-        urlfe.statistical_report(url, domain),               
+        urlfe.statistical_report(url, domain)
     ]
     return row
 
