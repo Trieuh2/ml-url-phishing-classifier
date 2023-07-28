@@ -97,8 +97,8 @@ if (len(statistical_features) > 0):
 # ====================================================================================================
 print('untuned model:')
 untuned_trained_model = create_model(train_validation_dataset_filepath, target_header, None)
-ut_accuracy, ut_precision, ut_recall, ut_conf_matrix = evaluate_model(untuned_trained_model, testing_dataset_filepath, target_header, pos_label, 'models/untuned_model_evaluation_results.txt')
-print_performance_metrics(ut_accuracy, ut_precision, ut_recall, ut_conf_matrix)
+ut_accuracy, ut_precision, ut_recall, ut_f1_score, ut_conf_matrix = evaluate_model(untuned_trained_model, testing_dataset_filepath, target_header, pos_label, 'models/untuned_model_evaluation_results.txt')
+print_performance_metrics(ut_accuracy, ut_precision, ut_recall, ut_f1_score, ut_conf_matrix)
 
 # ====================================================================================================
 # 4. Find best hyperparameter settings
@@ -111,8 +111,8 @@ print('best hyperparameter settings:' + str(best_hp_settings) + '\n')
 # ====================================================================================================
 print('tuned model:')
 tuned_trained_model = create_model(train_validation_dataset_filepath, target_header, best_hp_settings)
-t_accuracy, t_precision, t_recall, t_conf_matrix = evaluate_model(tuned_trained_model, testing_dataset_filepath, target_header, pos_label, 'models/tuned_model_evaluation_results.txt')
-print_performance_metrics(t_accuracy, t_precision, t_recall, t_conf_matrix)
+t_accuracy, t_precision, t_recall, t_f1_score, t_conf_matrix = evaluate_model(tuned_trained_model, testing_dataset_filepath, target_header, pos_label, 'models/tuned_model_evaluation_results.txt')
+print_performance_metrics(t_accuracy, t_precision, t_recall, t_f1_score, t_conf_matrix)
 
 # ====================================================================================================
 # 6. Visualize feature importance
