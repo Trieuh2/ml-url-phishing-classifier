@@ -84,6 +84,7 @@ def evaluate_model(model, testing_dataset_filepath, target_header, pos_label, ev
     accuracy = accuracy_score(Y_test, Y_pred)
     precision = precision_score(Y_test, Y_pred, pos_label=pos_label)
     recall = recall_score(Y_test, Y_pred, pos_label=pos_label)
+    f1_score = 2 * (precision * recall) / (precision + recall)
     conf_matrix = confusion_matrix(Y_test, Y_pred)
 
     # Save the evaluation results to a text file
@@ -91,15 +92,17 @@ def evaluate_model(model, testing_dataset_filepath, target_header, pos_label, ev
         f.write("Accuracy: " + str(accuracy) + "\n")
         f.write("Precision: " + str(precision) + "\n")
         f.write("Recall: " + str(recall) + "\n")
+        f.write("F1-Score: " + str(f1_score) + "\n")
         f.write("Confusion Matrix: " + str(conf_matrix) + "\n")
 
-    return accuracy, precision, recall, conf_matrix
+    return accuracy, precision, recall, f1_score, conf_matrix
 
 # Function that prints out the performance metrics
-def print_performance_metrics(accuracy, precision, recall, conf_matrix):
+def print_performance_metrics(accuracy, precision, recall, f1_score, conf_matrix):
     print("Accuracy: ", accuracy)
     print("Precision: ", precision)
     print("Recall: ", recall)
+    print("F1-Score: ", f1_score)
     print("Confusion Matrix: ", conf_matrix)
     print()
 
