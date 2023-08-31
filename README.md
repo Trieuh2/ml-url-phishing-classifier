@@ -1,7 +1,7 @@
 # ml-url-phishing-classifier
 
 ## Features
-1. ML Model Creation: Trains a ML model selected URL features.
+1. ML Model Creation: Trains an ML model selected URL features.
 2. ML Model Tuning: Tunes the created ML model with hyperparameter-tuning.
 3. URL Classification: Identify if a provided URL is phishing or legitimate
 4. Feature Extraction: Parses a URL for structural and statistical data used for analysis.
@@ -37,7 +37,7 @@ pip install seaborn
 ## Data
 The data used in this project consists of extracted URL features that are used to train an ML model via the Random Forest Classification algorithm to identify URLs as phishing or legitimate. The raw dataset was sourced from Abdelhakim Hannousse and Salima Yahiouche (2021) as part of their open-source research study available [here](https://data.mendeley.com/datasets/c2gw7fy2j4/3). The source dataset is named 'dataset_B_05_2020.csv'.
 
-The source dataset is a compilation of 11,430 URLs with extracted features such as the URL length, URL hostname, number of dots, number of hyphens, longest words in the hostname, presence of IP address, and more features. Within the dataset, the 'status' column serves as the ground truth, and the ML model is trained on utilizing the extracted features to determine the status of the provided URL. 
+The source dataset is a compilation of 11,430 URLs with extracted features such as the URL length, URL hostname, number of dots, number of hyphens, longest words in the hostname, presence of IP address, and more features. Within the dataset, the 'status' column serves as the ground truth, and the ML model is trained to utilize the extracted features to determine the status of the provided URL. 
 
 The source dataset is balanced with 50% phishing URLs and 50% legitimate URLs. For training and testing, 70% of the raw data was split for training and the remaining 30% of data was used for testing. Within the training and testing datasets, the ratio of class distribution was maintained for a fair assessment.
 
@@ -98,16 +98,16 @@ Confusion Matrix: [[1556  159]
 '''
 
 ### Data visualizations
-After data preprocessing is performed, data visualizations are created to represent the feature distribution, feature correlation, and feature importance. Since structural features represent in binary and statistical features are represented numerically, a feature distribution plot and feature correlation matrix heatmap is created for each type of feature (structural/statistical), for each class (phishing/legitimate). A single feature importance plot is used to represent the influence of all selected features.
+After data preprocessing is performed, data visualizations are created to represent the feature distribution, feature correlation, and feature importance. Since structural features are represented in binary and statistical features are represented numerically, a feature distribution plot and feature correlation matrix heatmap are created for each type of feature (structural/statistical), for each class (phishing/legitimate). A single feature importance plot is used to represent the influence of all selected features.
 
-**Feature Distribution**
-The feature distribution for each type of feature (structural/statistical) for each class is represented in a stacked bar plot to understand if structural features appear more or less common in phishings URLs vs. legitimate URLs, and if the value in a statistical feature is typically higher or lower in one class compared to another.
+**Feature Distribution**  
+The feature distribution for each type of feature (structural/statistical) for each class is represented in a stacked bar plot to understand if structural features appear more or less common in phishing URLs vs. legitimate URLs and if the value in a statistical feature is typically higher or lower in one class compared to another.
 	
-**Feature Correlation Matrix Heatmap**
-The feature correlation matrix heatmap is used to represent how closely correlated a structural feature is related to another structural feature and vice versa for statistical features. High correlation suggests a strong linear relationship between two variables in which an increase in one variable will predictably increase the value in the highly correlated variable as well (which can identify redundant selected features and also cause performance impact on the ML model).
+**Feature Correlation Matrix Heatmap**  
+The feature correlation matrix heatmap is used to represent how closely correlated a structural feature is related to another structural feature and vice versa for statistical features. The high correlation suggests a strong linear relationship between two variables in which an increase in one variable will predictably increase the value in the highly correlated variable as well (which can identify redundant selected features and also cause a performance impact on the ML model).
 
-**Feature Importance**
-After creating and training the tuned model, the feature importance is illustrated in a ranked bar plot, used to represent how much each feature is contribution to the final prediction.
+**Feature Importance**  
+After creating and training the tuned model, the feature importance is illustrated in a ranked bar plot, used to represent how much each feature contributes to the final prediction.
 
 ## Acknowledgements
-The original raw dataset and main feature extraction logic was sourced from the [open-source repository](https://data.mendeley.com/datasets/c2gw7fy2j4/3) created as a result of a [study](https://arxiv.org/abs/2010.12847) performed by Abdelhakim Hannousse and Salima Yahiouche.
+The original raw dataset and main feature extraction logic were sourced from the [open-source repository](https://data.mendeley.com/datasets/c2gw7fy2j4/3) created as a result of a [study](https://arxiv.org/abs/2010.12847) performed by Abdelhakim Hannousse and Salima Yahiouche.
