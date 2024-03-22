@@ -45,7 +45,7 @@ The source dataset is a compilation of 11,430 URLs with extracted features such 
 
 The source dataset is balanced with 50% phishing URLs and 50% legitimate URLs. For training and testing, 70% of the raw data was split for training and the remaining 30% of data was used for testing. Within the training and testing datasets, the ratio of class distribution was maintained for a fair assessment.
 
-In the [raw dataset](https://github.com/Trieuh2/ml-url-phishing-classifier/blob/main/datasets/raw_dataset.csv) used in the project, the source dataset is slightly modified to correct typos in the URL feature names.
+In the [raw dataset](data/raw_dataset.csv) used in the project, the source dataset is slightly modified to correct typos in the URL feature names.
 
 ## Usage
 
@@ -89,7 +89,7 @@ In the example below, the 'ip', 'https_token', 'prefix_suffix', 'shortening_serv
 
 To run a 'legitimate' URL example, use: "https://www.google.com" or a website you have safely visited before.
 
-To run a 'phishing' URL example, an accessible link can be found via the [raw_dataset.csv](https://github.com/Trieuh2/ml-url-phishing-classifier/blob/main/datasets/raw_dataset.csv) file. The application safely performs feature extraction offline and does not perform any web requests to any links entered into the application.
+To run a 'phishing' URL example, an accessible link can be found via the [raw_dataset.csv](data/raw_dataset.csv) file. The application safely performs feature extraction offline and does not perform any web requests to any links entered into the application.
 
 ## Results
 After training the ML model on the Random Forest Classification algorithm and performing hyperparameter tuning, the tuned model's evaluation resulted in the performance metrics below.
@@ -106,18 +106,19 @@ Confusion Matrix:
 After data preprocessing is performed, data visualizations are created to represent the feature distribution, feature correlation, and feature importance. Since structural features are represented in binary and statistical features are represented numerically, a feature distribution plot and feature correlation matrix heatmap are created for each type of feature (structural/statistical), for each class (phishing/legitimate). A single feature importance plot is used to represent the influence of all selected features.
 </br>
 </br>
+
 **Feature Distribution**  
-The feature distribution for each type of feature (structural/statistical) for each class is represented in a stacked bar plot to identify the presence of each feature within the phishing vs. legitimate URLs. Using this visualization assists with understanding features that would be useful feature candidates for feature selection during improvement iterations. Features that appeared near 1:1 ratios (between phishing and legitimate URLs) were deselected during performance tuning iterations. These deselected features are commented out within the [app.py](https://github.com/Trieuh2/ml-url-phishing-classifier/blob/main/app.py) file.
-![Statistical Feature Distribution example visualization](https://github.com/Trieuh2/ml-url-phishing-classifier/blob/main/visualizations/transformed_dataset_statistical_feature_distribution.png)
+The feature distribution for each type of feature (structural/statistical) for each class is represented in a stacked bar plot to identify the presence of each feature within the phishing vs. legitimate URLs. Using this visualization assists with understanding features that would be useful feature candidates for feature selection during improvement iterations. Features that appeared near 1:1 ratios (between phishing and legitimate URLs) were deselected during performance tuning iterations. These deselected features are commented out within the [app.py](src/app.py) file.
+![Statistical Feature Distribution example visualization](data/visualizations/transformed_dataset_statistical_feature_distribution.png)
 
  
 **Feature Correlation Matrix Heatmap**  
 The feature correlation matrix heatmap represents how closely correlated a structural feature is related to another structural feature and vice versa for statistical features. Hot areas on the matrix indicate a high correlation which suggests a strong linear relationship between two variables in which an increase in one variable will predictably increase the value of the highly correlated variable as well. When creating and tuning the model, this heatmap was useful to prune redundant features that were selected and minimize the noise for training the model.
-![Statistical Feature Correlation Matrix Heatmap example visualization](https://github.com/Trieuh2/ml-url-phishing-classifier/blob/main/visualizations/transformed_dataset_statistical_feature_correlation.png)
+![Statistical Feature Correlation Matrix Heatmap example visualization](data/visualizations/transformed_dataset_statistical_feature_correlation.png)
 
 **Feature Importance**  
 The distribution of feature importance is illustrated in a ranked bar plot, where the selected features are represented on the Y-axis, and the weight of each feature (in relation to classification decisions) is represented on the X-axis. The highest-ranked features correlate to the most reliable features for the model to use when performing classification.
-![Feature Importance example visualization](https://github.com/Trieuh2/ml-url-phishing-classifier/blob/main/visualizations/url_feature_importance.png)
+![Feature Importance example visualization](data/visualizations/url_feature_importance.png)
 
 ## Acknowledgements
 The original raw dataset and main feature extraction logic were sourced from the [open-source repository](https://data.mendeley.com/datasets/c2gw7fy2j4/3) created as a result of a [study](https://arxiv.org/abs/2010.12847) performed by Abdelhakim Hannousse and Salima Yahiouche.
